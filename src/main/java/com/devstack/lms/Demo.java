@@ -2,10 +2,12 @@ package com.devstack.lms;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class Demo {
     public static void main(String[] args) throws IOException {
@@ -34,6 +36,9 @@ public class Demo {
         System.out.println("\nUser List:");
         userList.forEach(user -> System.out.println(user.getName()));
 
+        System.out.println("\nBorrowed Items:");
+        borrowedItemList.forEach((serialNumber, userName) -> System.out.println("Serial Number: " + serialNumber + ", Borrowed by: " + userName));
+
 
         boolean exit = false;
         while (!exit){
@@ -43,6 +48,7 @@ public class Demo {
             System.out.println("3.Borrow an Item");
             System.out.println("4.Return an Item");
             System.out.println("5.Exit");
+            System.out.print("\n\nEnter your choice : ");
 
             BufferedReader mainOption = new BufferedReader(new InputStreamReader(System.in));
             int mainChoiceString;
@@ -94,7 +100,17 @@ public class Demo {
             } else if (mainChoiceString==2) {
                 //You can implement user creation here
             } else if (mainChoiceString==3) {
-
+                System.out.println("\n\nBorrowing an Item:\n\n");
+                System.out.println("Which user is borrowing the item?");
+                IntStream.range(0, library.getUserList().size()).forEach(index -> System.out.println((index) + ". " + library.getUserList().get(index).getName()));
+                int userIndex = Integer.parseInt(new BufferedReader(new InputStreamReader(System.in)).readLine());
+                System.out.println("Enter serial number of the item to borrow:");
+                String serialNumberToBorrow = new BufferedReader(new InputStreamReader(System.in)).readLine();
+                library.borrowItem(serialNumberToBorrow,library.getUserList().get(userIndex));
+            } else if (mainChoiceString==5) {
+                exit=true;
+            }else {
+                System.out.println("Invalid option. Please try again.");
             }
         }
 
